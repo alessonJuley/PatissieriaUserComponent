@@ -49,27 +49,60 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             let selectStatementString = "SELECT userID, useremail, userpass FROM User"
             var selectStatementQuery: OpaquePointer?
             
-            // select query
-            // get data
+            // =============================FOR TESTING=============================
             var showData: String!
             showData = ""
+            // =============================FOR TESTING=============================
             
             if sqlite3_prepare_v2(dbQueue, selectStatementString, -1, &selectStatementQuery, nil) == SQLITE_OK {
                 // this will loop through all the rows in Users table until email and pass match in the users table
                 while sqlite3_step(selectStatementQuery) == SQLITE_ROW{
                     
+                    // =============================FOR TESTING=============================
                     showData += "ID: " + String(cString: sqlite3_column_text(selectStatementQuery, 0)) + "\t\t" + "email: " + String(cString: sqlite3_column_text(selectStatementQuery, 1)) + "\t\t" +
                         "password: " + String(cString: sqlite3_column_text(selectStatementQuery, 2)) + "\n"
                     print(showData ?? "This is showData")
+                    // =============================FOR TESTING=============================
                     
                     if(loginEmail == String(cString: sqlite3_column_text(selectStatementQuery, 1)) && loginPass == String(cString: sqlite3_column_text(selectStatementQuery, 2))){
+                        
                         loginSuccessful = true
+                        // =======ADD THIS IF YOU WANT TO DIRECT USER TO DIFFERENT VIEWCONTROLLERS BASED ON USER TYPE=======
+//                        if String(cString: sqlite3_column_text(selectStatementQuery, 1)) == "admin@test.com" && String(cString: sqlite3_column_text(selectStatementQuery, 2)) == "admin1234" {
+//
+//                            // User is an admin, navigate to admin view controller
+//                            let adminViewController = storyboard?.instantiateViewController(withIdentifier: "productViewController") as! ProductListTableViewController
+//                            navigationController?.pushViewController(adminViewController, animated: true)
+//
+//                            // Hide the back button in the regular view controller
+//                            navigationController?.setNavigationBarHidden(true, animated: false)
+//                        }
+//                        else if String(cString: sqlite3_column_text(selectStatementQuery, 3)) == "Yes"{
+//                            // User is an admin, navigate to admin view controller
+//                            let visuallyImpairedViewController = storyboard?.instantiateViewController(withIdentifier: "VisualImpairedViewController") as! VisuallyImpairedHomeViewController
+//                            navigationController?.pushViewController(visuallyImpairedViewController, animated: true)
+//
+//                            // Hide the back button in the regular view controller
+//                            navigationController?.setNavigationBarHidden(true, animated: false)
+//                        }
+//                        else{
+//                            // User is not an admin, navigate to regular view controller
+//                            let regularViewController = storyboard?.instantiateViewController(withIdentifier: "RegularViewController") as! HomeViewController
+//                            navigationController?.pushViewController(regularViewController, animated: true)
+//
+//                            // Hide the back button in the regular view controller
+//                            navigationController?.setNavigationBarHidden(true, animated: false)
+//                        }
+                        // =======ADD THIS IF YOU WANT TO DIRECT USER TO DIFFERENT VIEWCONTROLLERS BASED ON USER TYPE=======
                         break
                     }
                 }
                 
                 if(loginSuccessful){
+                    // =============================FOR TESTING=============================
+                    // you can comment this after you add the code for directing users to different viewcontrollers based on their type
                     showMessage(message: "Login success", buttonCaption: "Close", controller: self)
+                    // =============================FOR TESTING=============================
                 }
                 else{
                     showMessage(message: "Login failed", buttonCaption: "Try again", controller: self)
@@ -77,11 +110,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 sqlite3_finalize(selectStatementQuery)
             }
             else{
+                // =============================FOR TESTING=============================
                 print("============================")
                 print("============================")
                 print("============================")
                 print("============================")
                 print("[LoginViewController>loginButton] something failed. !SQLITE_OK")
+                // =============================FOR TESTING=============================
             }
         }
         else{
@@ -134,6 +169,4 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
-
 }
