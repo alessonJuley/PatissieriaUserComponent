@@ -55,11 +55,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func registerButton(_ sender: UIButton) {
-        // before you insert user data, form must be validated
+        
         if validateForm(){
-            // insert data
             let insertUserStatementString = "INSERT INTO User (firstName, lastName, visuallyImpaired, useremail, userpass) VALUES (?, ?, ?, ?, ?)"
-            
             var insertUserStatementQuery : OpaquePointer?
             
             // compile sql query and check if status is okay
@@ -72,8 +70,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
                 sqlite3_bind_text(insertUserStatementQuery, 5, passwordTextField.text ?? "" , -1, SQLITE_TRANSIENT)
                 
                 if(sqlite3_step(insertUserStatementQuery)) == SQLITE_DONE{
-
-                    
                     // check for duplication and delete duplicate
                     if(deleteDuplicateUser() != true){
                         resetForm()
@@ -95,7 +91,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
             }
             // ================================FOR TESTING========================================
             let selectUserStatementString = "SELECT userID, firstName, lastName, visuallyImpaired, useremail, userpass FROM User"
-            
             var selectUserStatementQuery: OpaquePointer?
             
             var showData: String!
@@ -130,7 +125,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         var checkSuccess : Bool = false
         
         let deleteDuplicateProduct = sqlite3_exec(dbQueue, "DELETE FROM User WHERE userID NOT IN (SELECT MIN(userID) FROM User GROUP BY useremail)", nil, nil, nil)
-        
         
         if(deleteDuplicateProduct != SQLITE_OK){
             print("[RegisterViewController>registerButton] Cannot delete duplicate in User table 🙁")
@@ -188,7 +182,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate {
         )
     }
     
-
     // MARK: FORM VALIDATIONS
     func validateForm() -> Bool{
         // if text fields are empty
